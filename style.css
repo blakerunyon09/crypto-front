@@ -1,0 +1,11 @@
+#coin_search {
+  color: grey;
+}
+
+#search_suggestion {
+  position: relative;
+  left: -150px;
+  font-size: 11px;
+  font-family: system-ui;
+  color: #999;
+}
