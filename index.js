@@ -1,4 +1,4 @@
-const backendBaseAPI = "http://localhost:3000/search?name_id="
+const backendBaseAPI = "https://coin-tracker-backend.herokuapp.com//search?name_id="
 const coinGeckoAPI = "https://api.coingecko.com/api/v3/coins/list"
 let cryptoID = ""
 const coinSearch = document.querySelector('#coin_search')
@@ -22,7 +22,7 @@ const today = new Date()
 let user_id = 0
 
 loginSubmit.addEventListener('click',function(){
-  fetch(`http://localhost:3000/login?username=${username.value}&password=${password.value}`)
+  fetch(`https://coin-tracker-backend.herokuapp.com//login?username=${username.value}&password=${password.value}`)
     .then(handleResponse)
     .then(user => {
       fetch(`https://api.coingecko.com/api/v3/coins/${user.cryptocurrencies[0].name_id}/market_chart?vs_currency=usd&days=${findTime()}&interval=daily`)
@@ -229,24 +229,24 @@ const renderChart = (timeArray, priceArray, marketArray) => {
             remove.textContent = 'Remove From Favorites'
             addRemove.append(add, remove)
             add.addEventListener('click', () => {
-              fetch(`http://localhost:3000/search?name_id=${input.toLowerCase()}`)
+              fetch(`https://coin-tracker-backend.herokuapp.com//search?name_id=${input.toLowerCase()}`)
                 .then(handleResponse)
                 .then(data => {
                   cryptoID = data.id
                 }).then(data => {
-                  fetch(`http://localhost:3000/favorites?cryptocurrency_id=${cryptoID}&user_id=${user_id}`, {
+                  fetch(`https://coin-tracker-backend.herokuapp.com//favorites?cryptocurrency_id=${cryptoID}&user_id=${user_id}`, {
                 method: 'POST'
               })
             })})
             remove.addEventListener('click', () => {
               const select = document.querySelector('select')
               console.log(select.value)
-              fetch(`http://localhost:3000/search?name_id=${select.value.toLowerCase()}`)
+              fetch(`https://coin-tracker-backend.herokuapp.com//search?name_id=${select.value.toLowerCase()}`)
                 .then(handleResponse)
                 .then(data => {
                   cryptoID = data.id
                 }).then(data => {
-                  fetch(`http://localhost:3000/removeFav?cryptocurrency_id=${cryptoID}&user_id=${user_id}`, {
+                  fetch(`https://coin-tracker-backend.herokuapp.com//removeFav?cryptocurrency_id=${cryptoID}&user_id=${user_id}`, {
                 method: 'DELETE'
               })
             })})
