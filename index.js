@@ -98,12 +98,14 @@ marCapButton.addEventListener('click', function(){
 // PREDICTS USERS SEARCH
 const predictSearch = (event) => {
   searchSuggestion.textContent = ""
-  input = event.target.value.toUpperCase()
+  input = event.target.value.toLowerCase()
   searchAPI = backendBaseAPI + input
+  console.log(searchAPI)
   if(event.target.value != ""){
     fetch(searchAPI)
     .then(handleResponse)
     .then(data => {
+      console.log(data)
       searchSuggestion.textContent = data.name_id
     })
   }
