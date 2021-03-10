@@ -169,24 +169,27 @@ const renderChart = (timeArray, priceArray, marketArray) => {
                     labels: timeArray.reverse(),
                     datasets: [
                       {
-                        label: '',
+                        label: 'Price',
                         data: priceArray,
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.0)'
+                            'rgba(255, 99, 132, 0)'      
                         ],
                         borderColor: [
-                            '#A3BE8C'
-                        ]
+                          '#8FBCBB'
+                            
+                        ],
+                        borderWidth: 2
                     },
                     {
-                      label: '',
+                      label: 'Total Market Capitualization',
                       data: marketArray,
                       backgroundColor: [
-                          'rgba(255, 99, 132, 0.0)'
+                          'rgba(255, 99, 132, 0)'
                       ],
                       borderColor: [
-                          '#A3BE8C'
-                      ]
+                          '#ECEFF4'
+                      ],
+                      borderWidth: 2
                   }
                   ]
                 },
