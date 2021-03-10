@@ -7,15 +7,31 @@
   <script defer src="index.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
   <title>Document</title>
 </head>
 <body>
-  <input id="coin_search" type="text" placeholder="Search a Coin..."><br>
-  <span id="search_suggestion"></span>
-  <input type="radio" id="price" name="cap_type" value="price">
-  <label for="male">Price</label><br>
-  <input type="radio" id="mar_cap" name="cap_type" value="mar_cap">
-  <label for="female">Market Capitalization</label><br>
+  <header>
+    <div>
+      <input type="text" id="username" placeholder="Username:" value="Jamonsta">
+      <input type="password" id="password" placeholder="Password:" value="1234">
+      <input type="submit" id="login_submit" value="Login">
+    </div>
+    <input id="coin_search" type="text" placeholder="Search a Coin...">
+    <span id="search_suggestion"></span>
+    <div id="select_favorite"></div>
+    <div>
+      <input type="radio" id="price" name="cap_type" value="price">
+      <label for="male">Price</label><br>
+      <input type="radio" id="mar_cap" name="cap_type" value="mar_cap">
+      <label for="female">Market Capitalization</label><br>
+    </div>
+    <p><input type="text" id="start_date" /> - TO - <input type="text" id="end_date" /><input type="Submit" id="submit_search" value="Submit"</p>
+  </header>
   <canvas id="myChart"></canvas>
+  <div id="add_remove">
+  </div>
 </body>
 </html>

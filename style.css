@@ -4,8 +4,8 @@
 
 #search_suggestion {
   position: relative;
-  left: -150px;
+  left: -146px;
   font-size: 11px;
   font-family: system-ui;
-  color: #999;
+  color: grey;
 }
