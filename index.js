@@ -32,16 +32,25 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // FETCHES LOGIN & FIRST CHART
 loginSubmit.addEventListener('click',function(){
+  firstLoadURL = ""
   fetch(`https://coin-tracker-backend.herokuapp.com/login?username=${username.value}&password=${password.value}`)
     .then(handleResponse)
     .catch(() => alert("Sorry, we couldn't find that Username & Password."))
     .then(user => {
-      fetch(`https://api.coingecko.com/api/v3/coins/${user.cryptocurrencies[0].name_id}/market_chart?vs_currency=usd&days=${findTime()}&interval=daily`)
+      if(user.cryptocurrencies.length > 0){
+        firstLoadURL = `https://api.coingecko.com/api/v3/coins/${user.cryptocurrencies[0].name_id}/market_chart?vs_currency=usd&days=${findTime()}&interval=daily`
+      }
+      else {
+        firstLoadURL = `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=${findTime()}&interval=daily`
+      }
+      fetch(firstLoadURL)
       .then(handleResponse)
       .then(data => {
         priceArray.length = 0
         createChartData(data, marketArray, "market_caps")
         renderChart(timeArray,priceArray, marketArray)
+        input = user.cryptocurrencies[0].name_id
+        renderHeadings(data, input)
       })
       const select = document.createElement('select')
       user.cryptocurrencies.forEach(favorite => {
@@ -60,20 +69,25 @@ loginSubmit.addEventListener('click',function(){
       user_id = user.id
       selectFavorite.append(select)
       const loginFields = document.querySelector("#login") 
-      loginFields.innerHTML = '<a href="/" id="logout">LOGOUT</a>'
+      loginFields.innerHTML = '<div id="profile_options"><a href="/" id="logout">LOGOUT</a><span></span><span id="delete">DELETE ACCOUNT</span></div>'
+      //DELETES PROFILE
+      const deleteProfile = document.querySelector('#delete')
+      console.log(deleteProfile)
+      deleteProfile.addEventListener('click', () => {
+        fetch(`https://coin-tracker-backend.herokuapp.com/users/${user_id}`,{
+          method: "DELETE"
+        })
+        .then(response => response.json())
+        .then(alert('Your account has been deleted.'))
+        .then(location.reload())
+      })
     })
 })
 
 // PULLS CHART FROM FAVORITES DROPDOWN
 selectFavorite.addEventListener('change', (e) => {
-  priceArray.length = 0
-  fetch(`https://api.coingecko.com/api/v3/coins/${e.target.selectedOptions[0].id}/market_chart?vs_currency=usd&days=${findTime()}&interval=daily`)
-  .then(handleResponse)
-  .then(data => {
-    marketArray.length = 0
-    createChartData(data, priceArray, "prices")
-    renderChart(timeArray,priceArray, marketArray)
-  })
+  input = e.target.value
+  fetchChart("prices", priceArray, marketArray)
 })
 
 // FETCHES TIME
@@ -90,17 +104,14 @@ submitSearch.addEventListener('click', () => {
   if(priceButton.checked){
     input = coinSearch.value
     fetchChart("prices", priceArray, marketArray)
-    console.log(priceArray, marketArray)
   }
   else if(marCapButton.checked){
     input = coinSearch.value
     fetchChart("market_caps", marketArray, priceArray)
-    console.log(priceArray, marketArray)
   }
   else{
     input = coinSearch.value
     fetchChart("prices", priceArray, marketArray)
-    console.log(priceArray, marketArray)
   }
 })
 
@@ -127,6 +138,15 @@ const renderHeadings = (data, input) => {
   netPrice = dayPrice[1] - startPrice
   h2.textContent = `$${dayPrice[1].toLocaleString()}`
   h3.textContent = `$${netPrice.toLocaleString()}`
+  if(netPrice >= 0){
+    h3.classList.add("green")
+    h3.classList.remove("red")
+  }
+  else{
+    h3.classList.add("red")
+    h3.classList.remove("green")
+  }
+  
 }
 
 // RENDER PRICE CHART ON BUTTON
@@ -150,9 +170,10 @@ const predictSearch = (event) => {
     .then(data => {
       searchSuggestion.textContent = data.name_id
     })
+    .catch(error => {error})
   }
   else{
-    searchSuggestion.textContent = ""
+    setTimeout(function(){ searchSuggestion.textContent = "" }, 75);
   }
 }
 
@@ -168,6 +189,11 @@ const handleSearch = (e) => {
     else{
       fetchChart("prices", priceArray, marketArray)
     }
+   }
+   if(e.key == "Tab"){
+     e.preventDefault()
+     coinSearch.value = searchSuggestion.textContent
+     input = searchSuggestion.textContent
    }
 }
 
@@ -332,7 +358,9 @@ const renderChart = (timeArray, priceArray, marketArray) => {
                 .then(handleResponse)
                 .then(data => {
                   cryptoID = data.id
+                  console.log(data.id)
                 }).then(data => {
+                  console.log(`https://coin-tracker-backend.herokuapp.com/removeFav?cryptocurrency_id=${cryptoID}&user_id=${user_id}`)
                   fetch(`https://coin-tracker-backend.herokuapp.com/removeFav?cryptocurrency_id=${cryptoID}&user_id=${user_id}`, {
                 method: 'DELETE'
               })

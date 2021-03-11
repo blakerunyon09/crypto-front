@@ -56,6 +56,14 @@ body {
   animation-duration: 1s;
 }
 
+.green{
+  color: #A3BE8C;
+}
+
+.red{
+  color: #BF616A;
+}
+
 @keyframes slidein {
   0% {
     transform: translateX(100%);
@@ -126,6 +134,14 @@ input[type="Submit"]:active {
   color: #D8DEE9;
 }
 
+select {
+  padding: 5px;
+  margin: 5px;
+  font-size: 18px;
+  border-radius: 5px;
+  border-style: none;
+}
+
 label {
   font-size: 18px;
 }
@@ -148,6 +164,7 @@ canvas {
 
 #coin_search {
   color: grey;
+  text-transform: uppercase;
 }
 
 #filter {
@@ -158,11 +175,21 @@ canvas {
 
 #search_suggestion {
   position: absolute;
-  left: 9px;
-  top: 9px;
+  left: 10px;
+  top: 10px;
   font-size: 18px;
   font-family: system-ui;
   color: grey;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+@media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) { 
+  #search_suggestion {
+    left: 10px;
+    top: 9px;
+    letter-spacing: 0.034em;
+  }
 }
 
 #login-bar{
@@ -208,11 +235,26 @@ canvas {
   align-items: center;
 }
 
+#profile_options{
+  display: flex;
+}
+
+#profile_options span{
+    display: inline-flex;
+    align-items: center;
+    padding: 0 0 0 5px;
+}
+
 a#logout {
   font-weight: bold;
   text-decoration: none;
-  color: #BF616A;
+  color: #A3BE8C;
   padding-left: 5px;
   margin: 12px 0;
   display: block;
+}
+
+#delete{
+  color: #BF616A;
+  font-weight: bold;
 }
