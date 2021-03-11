@@ -14,6 +14,17 @@ body {
   flex-flow: column wrap;
 }
 
+.row {
+  flex-flow: row nowrap;
+}
+
+.row-1{
+  pointer-events: none;
+}
+
+.row-2{
+}
+
 .bg-red {
   background-color: #BF616A;
 }
@@ -61,6 +72,21 @@ body {
 /* INLINE STYLES */
 header {
   justify-content: space-between;
+  max-height: 82px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 75px;
+}
+
+h2{
+  margin: 0;
+}
+
+h3{
+  margin: 0;
+  font-size: 14px
 }
 
 nav {
@@ -103,6 +129,11 @@ canvas {
   max-width: fit-content;
 }
 
+.headings{
+  width: 80%;
+  margin: 0 auto;
+}
+
 #coin_search {
   color: grey;
 }
@@ -115,15 +146,21 @@ canvas {
 
 #search_suggestion {
   position: absolute;
-  left: 10px;
-  top: 10px;
+  left: 9px;
+  top: 9px;
   font-size: 18px;
   font-family: system-ui;
   color: grey;
 }
 
-#login {
+#login-bar{
+  position: relative;
+  top: 0;
+  transition: top 0.75s ease-in-out;
+}
 
+#login-bar.hidden-top {
+  top: -45px;
 }
 
 #login_submit {

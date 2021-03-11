@@ -11,12 +11,12 @@
   <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
   <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
-  <title>Document</title>
+  <title>KrypoKurent</title>
 </head>
 <body>
   <header class="flex">
-    <section class="flex column" id="login-bar">
-      <div>
+    <section class="flex column hidden-top" id="login-bar">
+      <div id="login">
         <input type="text" id="username" placeholder="Username:" value="Jamonsta">
         <input type="password" id="password" placeholder="Password:" value="1234">
       </div>
@@ -42,11 +42,18 @@
       </nav>
     </div>
   </header>
-  <h1></h1>
-  <h2></h2>
-  <h3></h3>
-  <canvas id="myChart"></canvas>
-  <div id="add_remove">
-  </div>
+  <main class="flex column">
+    <section class="row-1">
+      <div class="headings">
+        <h1></h1>
+        <h2></h2>
+        <h3></h3>
+      </div>
+    </section>
+    <section class="row-2">
+      <canvas id="myChart"></canvas>
+      <div id="add_remove"></div>
+    </section>
+  </main>
 </body>
 </html>

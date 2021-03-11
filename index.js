@@ -15,6 +15,7 @@ const password = document.querySelector('#password')
 const loginSubmit = document.querySelector('#login_submit')
 const selectFavorite = document.querySelector('#select_favorite')
 const menuIcon = document.querySelector('#menu_icon')
+const login = document.querySelector('#login-bar')
 const priceArray = []
 const marketArray = []
 const timeArray = []
@@ -105,8 +106,8 @@ const renderHeadings = (data, input) => {
   dayPrice = data.prices.pop()
   startPrice = data.prices[0][1]
   netPrice = dayPrice[1] - startPrice
-  h2.textContent = `Today's Price $${dayPrice[1].toFixed(2)}`
-  h3.textContent = `Net Change $${netPrice.toFixed(2)}`
+  h2.textContent = `$${dayPrice[1].toLocaleString().slice(0, -4)}`
+  h3.textContent = `$${netPrice.toLocaleString().slice(0, -4)}`
 }
 
 // RENDER PRICE CHART ON BUTTON
@@ -198,6 +199,16 @@ menuIcon.addEventListener('click', () => {
   }
 })
 
+// POP LOGIN ON AND OFF
+login.addEventListener('click', () => {
+  if(login.classList.contains('hidden-top')){
+    login.classList.remove('hidden-top')
+  }
+  else{
+    login.classList.add('hidden-top')
+  }
+})
+
 // CREATES CHART
 const renderChart = (timeArray, priceArray, marketArray) => {
   var ctx = document.getElementById('myChart').getContext('2d');
@@ -232,6 +243,9 @@ const renderChart = (timeArray, priceArray, marketArray) => {
                   ]
                 },
                 options: {
+                  legend: {
+                    display: false
+                  },
                   elements: {
                     line: {
                       borderJoinStyle: 'miter',
