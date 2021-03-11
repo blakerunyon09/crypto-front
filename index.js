@@ -13,6 +13,7 @@ const submitSearch = document.querySelector('#submit_search')
 const username = document.querySelector('#username')
 const password = document.querySelector('#password')
 const loginSubmit = document.querySelector('#login_submit')
+const viewLogin = document.querySelector('#view-login')
 const selectFavorite = document.querySelector('#select_favorite')
 const menuIcon = document.querySelector('#menu_icon')
 const login = document.querySelector('#login-bar')
@@ -23,6 +24,11 @@ const lastYear = new Date(new Date().setFullYear(new Date().getFullYear() - 1))
 const today = new Date()
 let user_id = 0
 
+// RENDERS FIRST CHART ON LOAD
+window.addEventListener('DOMContentLoaded', () => {
+  input = 'bitcoin'
+  fetchChart("prices", priceArray, marketArray)
+});
 
 // FETCHES LOGIN & FIRST CHART
 loginSubmit.addEventListener('click',function(){
@@ -73,14 +79,18 @@ const findTime = () => {
 // UPDATES CHART AFTER RADIO BUTTON
 submitSearch.addEventListener('click', () => {
   if(priceButton.checked){
+    input = coinSearch.value
     fetchChart("prices", priceArray, marketArray)
     console.log(priceArray, marketArray)
   }
   else if(marCapButton.checked){
+    input = coinSearch.value
     fetchChart("market_caps", marketArray, priceArray)
     console.log(priceArray, marketArray)
   }
   else{
+    input = coinSearch.value
+    fetchChart("prices", priceArray, marketArray)
     console.log(priceArray, marketArray)
   }
 })
@@ -106,8 +116,8 @@ const renderHeadings = (data, input) => {
   dayPrice = data.prices.pop()
   startPrice = data.prices[0][1]
   netPrice = dayPrice[1] - startPrice
-  h2.textContent = `$${dayPrice[1].toLocaleString().slice(0, -4)}`
-  h3.textContent = `$${netPrice.toLocaleString().slice(0, -4)}`
+  h2.textContent = `$${dayPrice[1].toLocaleString()}`
+  h3.textContent = `$${netPrice.toLocaleString()}`
 }
 
 // RENDER PRICE CHART ON BUTTON
@@ -200,12 +210,14 @@ menuIcon.addEventListener('click', () => {
 })
 
 // POP LOGIN ON AND OFF
-login.addEventListener('click', () => {
+viewLogin.addEventListener('click', () => {
   if(login.classList.contains('hidden-top')){
     login.classList.remove('hidden-top')
+    viewLogin.className = "fas fa-caret-square-up"
   }
   else{
     login.classList.add('hidden-top')
+    viewLogin.className = "fas fa-caret-square-down"
   }
 })
 
@@ -243,6 +255,14 @@ const renderChart = (timeArray, priceArray, marketArray) => {
                   ]
                 },
                 options: {
+                  tooltips: {
+                    mode: 'index',
+                    intersect: false
+                 },
+                 hover: {
+                    mode: 'index',
+                    intersect: false
+                 },
                   legend: {
                     display: false
                   },
@@ -250,6 +270,9 @@ const renderChart = (timeArray, priceArray, marketArray) => {
                     line: {
                       borderJoinStyle: 'miter',
                       borderWidth: 2
+                    },
+                    point:{
+                      radius: 0
                     }
                   },
                   scales: {
@@ -309,12 +332,12 @@ const renderChart = (timeArray, priceArray, marketArray) => {
 
 // RENDER CALENDER W/ JQUERY
 $(function() {
-  $( "#start_date" ).datepicker({ minDate: -1000, maxDate: "+0D" });
+  $( "#start_date" ).datepicker({ minDate: -4451, maxDate: "+0D" });
   $("#start_date").datepicker("setDate", lastYear);
   $( "#start_date" ).datepicker( "option", "dateFormat", "mm/dd/yy");
 });
 $(function() {
-  $( "#end_date" ).datepicker({ minDate: -1000, maxDate: "+0D" });
+  $( "#end_date" ).datepicker({ minDate: -4452, maxDate: "+0D" });
   $("#end_date").datepicker("setDate",today);
   $( "#end_date" ).datepicker( "option", "dateFormat", "mm/dd/yy");
 });

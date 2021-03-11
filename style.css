@@ -11,7 +11,7 @@ body {
 }
 
 .column {
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
 }
 
 .row {
@@ -107,12 +107,18 @@ input {
   border-style: none;
 }
 
+input:focus {
+  outline: none;
+}
+
 input[type="Submit"] {
   background-color: #D8DEE9;
+  font-weight: bold;
 }
 
 input[type="Submit"]:active {
   background-color: #4C566A;
+  color: #D8DEE9;
 }
 
 label {
@@ -127,6 +133,7 @@ canvas {
 .fas {
   font-size: 27px;
   max-width: fit-content;
+  margin-right: 6px;
 }
 
 .headings{
@@ -156,7 +163,7 @@ canvas {
 #login-bar{
   position: relative;
   top: 0;
-  transition: top 0.75s ease-in-out;
+  transition: top 0.5s ease-in-out;
 }
 
 #login-bar.hidden-top {
@@ -164,11 +171,26 @@ canvas {
 }
 
 #login_submit {
+  color: #2E3440;
+}
+
+#view-login, #login_submit {
   max-width: fit-content;
+  padding: 6px 5px 4px 5px;
+  font-weight: bold;
+}
+
+#view-login {
+  color: #4C566A;
+  font-size: 30px;
+  padding: 4px;
+}
+
+#view-login:focus, #login_submit:focus {
+  outline: none;
 }
 
 #add_remove {
   margin: 10px auto;
   max-width: 80%
 }
-
