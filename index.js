@@ -34,6 +34,7 @@ window.addEventListener('DOMContentLoaded', () => {
 loginSubmit.addEventListener('click',function(){
   fetch(`https://coin-tracker-backend.herokuapp.com/login?username=${username.value}&password=${password.value}`)
     .then(handleResponse)
+    .catch(() => alert("Sorry, we couldn't find that Username & Password."))
     .then(user => {
       fetch(`https://api.coingecko.com/api/v3/coins/${user.cryptocurrencies[0].name_id}/market_chart?vs_currency=usd&days=${findTime()}&interval=daily`)
       .then(handleResponse)
@@ -50,8 +51,16 @@ loginSubmit.addEventListener('click',function(){
         option.id = favorite.name_id
         select.append(option)
       })
+      login.classList.add('hidden-top')
+      const name = document.createElement('span')
+      const nameDrop = document.querySelector('#name_drop')
+      name.id = "name"
+      name.textContent = user.username.slice(0,3).toUpperCase()
+      nameDrop.append(name)
       user_id = user.id
       selectFavorite.append(select)
+      const loginFields = document.querySelector("#login") 
+      loginFields.innerHTML = '<a href="/" id="logout">LOGOUT</a>'
     })
 })
 
