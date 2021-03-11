@@ -14,6 +14,7 @@ const username = document.querySelector('#username')
 const password = document.querySelector('#password')
 const loginSubmit = document.querySelector('#login_submit')
 const selectFavorite = document.querySelector('#select_favorite')
+const menuIcon = document.querySelector('#menu_icon')
 const priceArray = []
 const marketArray = []
 const timeArray = []
@@ -21,6 +22,8 @@ const lastYear = new Date(new Date().setFullYear(new Date().getFullYear() - 1))
 const today = new Date()
 let user_id = 0
 
+
+// FETCHES LOGIN & FIRST CHART
 loginSubmit.addEventListener('click',function(){
   fetch(`https://coin-tracker-backend.herokuapp.com/login?username=${username.value}&password=${password.value}`)
     .then(handleResponse)
@@ -45,6 +48,7 @@ loginSubmit.addEventListener('click',function(){
     })
 })
 
+// PULLS CHART FROM FAVORITES DROPDOWN
 selectFavorite.addEventListener('change', (e) => {
   priceArray.length = 0
   fetch(`https://api.coingecko.com/api/v3/coins/${e.target.selectedOptions[0].id}/market_chart?vs_currency=usd&days=${findTime()}&interval=daily`)
@@ -56,6 +60,7 @@ selectFavorite.addEventListener('change', (e) => {
   })
 })
 
+// FETCHES TIME
 const findTime = () => {
   let startDateInt = new Date(startDate.value)
   let endDateInt = new Date(endDate.value)
@@ -68,9 +73,14 @@ const findTime = () => {
 submitSearch.addEventListener('click', () => {
   if(priceButton.checked){
     fetchChart("prices", priceArray, marketArray)
+    console.log(priceArray, marketArray)
   }
-  if(marCapButton.checked){
+  else if(marCapButton.checked){
     fetchChart("market_caps", marketArray, priceArray)
+    console.log(priceArray, marketArray)
+  }
+  else{
+    console.log(priceArray, marketArray)
   }
 })
 
@@ -82,7 +92,21 @@ const fetchChart = (dataType, arraySet, arrayReset) => {
     arrayReset.length = 0
     createChartData(data, arraySet, dataType)
     renderChart(timeArray,priceArray, marketArray)
+    renderHeadings(data, input)
   })
+}
+
+// RENDERS TITLES & PRICE CHANGE
+const renderHeadings = (data, input) => {
+  let h1 = document.querySelector('h1')
+  let h2 = document.querySelector('h2')
+  let h3 = document.querySelector('h3')
+  h1.textContent = input.toUpperCase()
+  dayPrice = data.prices.pop()
+  startPrice = data.prices[0][1]
+  netPrice = dayPrice[1] - startPrice
+  h2.textContent = `Today's Price $${dayPrice[1].toFixed(2)}`
+  h3.textContent = `Net Change $${netPrice.toFixed(2)}`
 }
 
 // RENDER PRICE CHART ON BUTTON
@@ -100,12 +124,10 @@ const predictSearch = (event) => {
   searchSuggestion.textContent = ""
   input = event.target.value.toLowerCase()
   searchAPI = backendBaseAPI + input
-  console.log(searchAPI)
   if(event.target.value != ""){
     fetch(searchAPI)
     .then(handleResponse)
     .then(data => {
-      console.log(data)
       searchSuggestion.textContent = data.name_id
     })
   }
@@ -143,6 +165,7 @@ const createChartData = (data, array, capitalType) => {
   if(capitalType == "prices"){
     let date = new Date()
     timeArray.length = 0
+    array.length = 0
     data.prices.forEach(timeframe => {
       array.push(timeframe[1])
       date.setDate(date.getDate() - 1)
@@ -152,6 +175,7 @@ const createChartData = (data, array, capitalType) => {
   else if(capitalType == "market_caps"){
     let date = new Date()
     timeArray.length = 0
+    array.length = 0
     data.market_caps.forEach(timeframe => {
       array.push(timeframe[1])
       date.setDate(date.getDate() - 1)
@@ -159,6 +183,20 @@ const createChartData = (data, array, capitalType) => {
     })
   }
 }
+
+// POPS FILTER ON AND OFF
+menuIcon.addEventListener('click', () => {
+  const nav = document.querySelector('nav')
+  const menuIcon = document.querySelector('#menu_icon')
+  if(nav.className == ""){
+    nav.classList.add('hidden')
+    menuIcon.className = "fas fa-bars"
+  }
+  else{
+    nav.classList.remove('hidden')
+    menuIcon.className = "fas fa-times"
+  }
+})
 
 // CREATES CHART
 const renderChart = (timeArray, priceArray, marketArray) => {
@@ -224,9 +262,13 @@ const renderChart = (timeArray, priceArray, marketArray) => {
             const addRemove = document.querySelector('#add_remove')
             const add = document.createElement('span')
             const remove = document.createElement('span')
+            add.classList.add("btn")
+            remove.classList.add("btn")
+            add.classList.add('bg-green')
+            remove.classList.add('bg-red')
             addRemove.innerHTML = ""
-            add.textContent = 'Add To Favorites'
-            remove.textContent = 'Remove From Favorites'
+            add.textContent = 'Track'
+            remove.textContent = 'Untrack'
             addRemove.append(add, remove)
             add.addEventListener('click', () => {
               fetch(`https://coin-tracker-backend.herokuapp.com/search?name_id=${input.toLowerCase()}`)
@@ -240,7 +282,6 @@ const renderChart = (timeArray, priceArray, marketArray) => {
             })})
             remove.addEventListener('click', () => {
               const select = document.querySelector('select')
-              console.log(select.value)
               fetch(`https://coin-tracker-backend.herokuapp.com/search?name_id=${select.value.toLowerCase()}`)
                 .then(handleResponse)
                 .then(data => {

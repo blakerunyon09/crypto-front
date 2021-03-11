@@ -1,15 +1,137 @@
+/* GLOBAL STYLES */
 body {
+  font-family: 'Poppins', sans-serif;
   background-color: #2E3440;
+  color: #ECEFF4;
+}
+
+/* UTILITY CLASSES */
+.flex {
+  display: flex;
+}
+
+.column {
+  flex-flow: column wrap;
+}
+
+.bg-red {
+  background-color: #BF616A;
+}
+
+.bg-green {
+  background-color: #A3BE8C;
+}
+
+.btn {
+  padding: 5px;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-left: 10px;
+  font-size: 14px
+}
+
+.out {
+  animation-name: slideout;
+  animation-duration: 1s;
+}
+
+.in {
+  animation-name: slidein;
+  animation-duration: 1s;
+}
+
+@keyframes slidein {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slideout {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(500%);
+  }
+}
+
+/* INLINE STYLES */
+header {
+  justify-content: space-between;
+}
+
+nav {
+  position: relative;
+  right: 0px;
+  transition: right 0.75s ease-in-out;
+}
+
+nav.hidden{
+  right: -250px;
+}
+
+input {
+  padding: 5px;
+  margin: 5px;
+  font-size: 18px;
+  border-radius: 5px;
+  border-style: none;
+}
+
+input[type="Submit"] {
+  background-color: #D8DEE9;
+}
+
+input[type="Submit"]:active {
+  background-color: #4C566A;
+}
+
+label {
+  font-size: 18px;
+}
+
+canvas {
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.fas {
+  font-size: 27px;
+  max-width: fit-content;
 }
 
 #coin_search {
   color: grey;
 }
 
+#filter {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+}
+
 #search_suggestion {
-  position: relative;
-  left: -146px;
-  font-size: 11px;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  font-size: 18px;
   font-family: system-ui;
   color: grey;
 }
+
+#login {
+
+}
+
+#login_submit {
+  max-width: fit-content;
+}
+
+#add_remove {
+  margin: 10px auto;
+  max-width: 80%
+}
+

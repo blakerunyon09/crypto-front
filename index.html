@@ -10,26 +10,41 @@
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
   <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
   <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
   <title>Document</title>
 </head>
 <body>
-  <header>
-    <div>
-      <input type="text" id="username" placeholder="Username:" value="Jamonsta">
-      <input type="password" id="password" placeholder="Password:" value="1234">
+  <header class="flex">
+    <section class="flex column" id="login-bar">
+      <div>
+        <input type="text" id="username" placeholder="Username:" value="Jamonsta">
+        <input type="password" id="password" placeholder="Password:" value="1234">
+      </div>
       <input type="submit" id="login_submit" value="Login">
+    </section>
+    <div id="filter">
+      <i id="menu_icon" class="fas fa-bars"></i>
+      <nav class="hidden">
+        <input id="coin_search" type="text" placeholder="Search a Coin...">
+        <span id="search_suggestion"></span>
+        <div id="select_favorite"></div>
+        <div>
+          <input type="radio" id="price" name="cap_type" value="price">
+          <label for="male">Price</label><br>
+          <input type="radio" id="mar_cap" name="cap_type" value="mar_cap">
+          <label for="female">Market Cap</label><br>
+        </div>
+        <div class="flex column">
+          <input type="text" id="start_date" />
+          <input type="text" id="end_date" />
+          <input type="Submit" id="submit_search" value="Submit" />
+        </div>
+      </nav>
     </div>
-    <input id="coin_search" type="text" placeholder="Search a Coin...">
-    <span id="search_suggestion"></span>
-    <div id="select_favorite"></div>
-    <div>
-      <input type="radio" id="price" name="cap_type" value="price">
-      <label for="male">Price</label><br>
-      <input type="radio" id="mar_cap" name="cap_type" value="mar_cap">
-      <label for="female">Market Capitalization</label><br>
-    </div>
-    <p><input type="text" id="start_date" /> - TO - <input type="text" id="end_date" /><input type="Submit" id="submit_search" value="Submit"</p>
   </header>
+  <h1></h1>
+  <h2></h2>
+  <h3></h3>
   <canvas id="myChart"></canvas>
   <div id="add_remove">
   </div>
