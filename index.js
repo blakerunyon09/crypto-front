@@ -17,6 +17,9 @@ const viewLogin = document.querySelector('#view-login')
 const selectFavorite = document.querySelector('#select_favorite')
 const menuIcon = document.querySelector('#menu_icon')
 const login = document.querySelector('#login-bar')
+const select = document.createElement('select')
+let nameRefresh = ""
+const favoritesArray = []
 const priceArray = []
 const marketArray = []
 const timeArray = []
@@ -37,6 +40,9 @@ loginSubmit.addEventListener('click',function(){
     .then(handleResponse)
     .catch(() => alert("Sorry, we couldn't find that Username & Password."))
     .then(user => {
+      user.cryptocurrencies.forEach(coin => {
+        favoritesArray.push(coin.name_id)
+      })
       if(user.cryptocurrencies.length > 0){
         firstLoadURL = `https://api.coingecko.com/api/v3/coins/${user.cryptocurrencies[0].name_id}/market_chart?vs_currency=usd&days=${findTime()}&interval=daily`
       }
@@ -51,15 +57,10 @@ loginSubmit.addEventListener('click',function(){
         renderChart(timeArray,priceArray, marketArray)
         input = user.cryptocurrencies[0].name_id
         renderHeadings(data, input)
+        nameRefresh = document.querySelector('h1').textContent.toLowerCase()
+        renderTrackButtons(nameRefresh)
       })
-      const select = document.createElement('select')
-      user.cryptocurrencies.forEach(favorite => {
-        const option = document.createElement('option')
-        option.value = favorite.name
-        option.textContent = favorite.name
-        option.id = favorite.name_id
-        select.append(option)
-      })
+      createSelector(user.cryptocurrencies)
       login.classList.add('hidden-top')
       const name = document.createElement('span')
       const nameDrop = document.querySelector('#name_drop')
@@ -72,7 +73,6 @@ loginSubmit.addEventListener('click',function(){
       loginFields.innerHTML = '<div id="profile_options"><a href="/" id="logout">LOGOUT</a><span></span><span id="delete">DELETE ACCOUNT</span></div>'
       //DELETES PROFILE
       const deleteProfile = document.querySelector('#delete')
-      console.log(deleteProfile)
       deleteProfile.addEventListener('click', () => {
         fetch(`https://coin-tracker-backend.herokuapp.com/users/${user_id}`,{
           method: "DELETE"
@@ -83,6 +83,19 @@ loginSubmit.addEventListener('click',function(){
       })
     })
 })
+
+const createSelector = (iterator) => {
+  selectFavorite.innerHTML = ""
+  iterator.forEach(favorite => {
+    const option = document.createElement('option')
+    option.value = favorite.name
+    option.textContent = favorite.name
+    option.id = favorite.name_id
+    select.append(option)
+  })
+  return select
+}
+
 
 // PULLS CHART FROM FAVORITES DROPDOWN
 selectFavorite.addEventListener('change', (e) => {
@@ -124,14 +137,20 @@ const fetchChart = (dataType, arraySet, arrayReset) => {
     createChartData(data, arraySet, dataType)
     renderChart(timeArray,priceArray, marketArray)
     renderHeadings(data, input)
+    nameRefresh = document.querySelector('h1').textContent.toLowerCase()
+    renderTrackButtons(nameRefresh)
   })
 }
 
 // RENDERS TITLES & PRICE CHANGE
 const renderHeadings = (data, input) => {
-  let h1 = document.querySelector('h1')
-  let h2 = document.querySelector('h2')
-  let h3 = document.querySelector('h3')
+  let headings = document.querySelector('#headings')
+  headings.innerHTML = ""
+  let div = document.createElement('div')
+  let h1 = document.createElement('h1')
+  let h2 = document.createElement('h2')
+  let h3 = document.createElement('h3')
+  div.className = "row-1 animate__animated headings animate__fadeInLeft"
   h1.textContent = input.toUpperCase()
   dayPrice = data.prices.pop()
   startPrice = data.prices[0][1]
@@ -146,7 +165,8 @@ const renderHeadings = (data, input) => {
     h3.classList.add("red")
     h3.classList.remove("green")
   }
-  
+  div.append(h1, h2, h3)
+  headings.append(div)
 }
 
 // RENDER PRICE CHART ON BUTTON
@@ -331,41 +351,70 @@ const renderChart = (timeArray, priceArray, marketArray) => {
                 }
             }
             )
-            const addRemove = document.querySelector('#add_remove')
-            const add = document.createElement('span')
-            const remove = document.createElement('span')
-            add.classList.add("btn")
-            remove.classList.add("btn")
-            add.classList.add('bg-green')
-            remove.classList.add('bg-red')
-            addRemove.innerHTML = ""
-            add.textContent = 'Track'
-            remove.textContent = 'Untrack'
-            addRemove.append(add, remove)
-            add.addEventListener('click', () => {
-              fetch(`https://coin-tracker-backend.herokuapp.com/search?name_id=${input.toLowerCase()}`)
-                .then(handleResponse)
-                .then(data => {
-                  cryptoID = data.id
-                }).then(data => {
-                  fetch(`https://coin-tracker-backend.herokuapp.com/favorites?cryptocurrency_id=${cryptoID}&user_id=${user_id}`, {
-                method: 'POST'
-              })
-            })})
-            remove.addEventListener('click', () => {
-              const select = document.querySelector('select')
-              fetch(`https://coin-tracker-backend.herokuapp.com/search?name_id=${select.value.toLowerCase()}`)
-                .then(handleResponse)
-                .then(data => {
-                  cryptoID = data.id
-                  console.log(data.id)
-                }).then(data => {
-                  console.log(`https://coin-tracker-backend.herokuapp.com/removeFav?cryptocurrency_id=${cryptoID}&user_id=${user_id}`)
-                  fetch(`https://coin-tracker-backend.herokuapp.com/removeFav?cryptocurrency_id=${cryptoID}&user_id=${user_id}`, {
-                method: 'DELETE'
-              })
-            })})
           }
+
+const renderTrackButtons = (nameSearch) => {
+  if(user_id > 0){
+    const options = selectFavorite.childNodes
+    const addRemove = document.querySelector('#add_remove')
+    const add = document.createElement('span')
+    const remove = document.createElement('span')
+    add.className = "btn bg-green"
+    remove.className = "btn bg-red"
+    addRemove.innerHTML = ""
+    remove.textContent = 'Untrack'
+    add.textContent = 'Track'
+    if(favoritesArray.includes(nameSearch)){
+      console.log("Untrack Button")
+      addRemove.append(remove)
+      add.remove()
+    }
+    else{
+      console.log("Track Button")
+      addRemove.append(add)
+      remove.remove()
+    }
+    add.addEventListener('click', () => {
+      fetch(`https://coin-tracker-backend.herokuapp.com/search?name_id=${input.toLowerCase()}`)
+        .then(handleResponse)
+        .then(data => {
+          cryptoID = data.id
+        }).then(data => {
+          fetch(`https://coin-tracker-backend.herokuapp.com/favorites?cryptocurrency_id=${cryptoID}&user_id=${user_id}`, {
+        method: 'POST'
+      }).then(data => {
+        addRemove.append(remove)
+        add.remove()
+        console.log(nameRefresh)
+        console.log(options)
+        // 
+        // 
+        // HERE
+        // 
+        // 
+      }
+      )
+    })})
+    remove.addEventListener('click', () => {
+      const select = document.querySelector('select')
+      fetch(`https://coin-tracker-backend.herokuapp.com/search?name_id=${select.value.toLowerCase()}`)
+        .then(handleResponse)
+        .then(data => {
+          cryptoID = data.id
+        }).then(data => {
+          console.log(`https://coin-tracker-backend.herokuapp.com/removeFav?cryptocurrency_id=${cryptoID}&user_id=${user_id}`)
+          fetch(`https://coin-tracker-backend.herokuapp.com/removeFav?cryptocurrency_id=${cryptoID}&user_id=${user_id}`, {
+        method: 'DELETE'
+      }).then(data => {
+        addRemove.append(add)
+        remove.remove()
+        console.log(nameRefresh)
+        console.log(options)
+      }
+      )
+    })})
+  }
+}
 
 // RENDER CALENDER W/ JQUERY
 $(function() {
