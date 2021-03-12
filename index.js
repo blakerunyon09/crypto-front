@@ -189,6 +189,7 @@ const predictSearch = (event) => {
     .then(handleResponse)
     .then(data => {
       searchSuggestion.textContent = data.name_id
+      input = data.name_id
     })
     .catch(error => {error})
   }
@@ -202,12 +203,15 @@ const handleSearch = (e) => {
    if(e.key == "Enter"){
     if(priceButton.checked){
       fetchChart("prices", priceArray, marketArray)
+      coinSearch.value = searchSuggestion.textContent
     }
     else if(marCapButton.checked){
       fetchChart("market_caps", marketArray, priceArray)
+      coinSearch.value = searchSuggestion.textContent
     }
     else{
       fetchChart("prices", priceArray, marketArray)
+      coinSearch.value = searchSuggestion.textContent
     }
    }
    if(e.key == "Tab"){
